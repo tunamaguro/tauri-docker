@@ -8,8 +8,11 @@ ARG PASSWORD=password
 
 # Add user for develop
 # If you  don't need, please comment out
-RUN groupadd -g $GID $GROUPNAME && \
-    useradd -m -s /bin/bash -u $UID -g $GID $USERNAME 
+RUN apt-get update -y && apt-get install -y sudo && \
+    groupadd -g $GID $GROUPNAME && \
+    useradd -m -s /bin/bash -u $UID -g $GID -G sudo $USERNAME && \
+    echo $USERNAME:$PASSWORD | chpasswd && \
+    echo "$USERNAME   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Tauri dependencies
 # See https://tauri.app/v1/guides/getting-started/prerequisites#setting-up-linux
